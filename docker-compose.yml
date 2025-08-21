@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  chroma:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: agent-chroma
+    volumes:
+      - chroma_data:/var/chroma/.chroma
+    ports: []
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: agent-backend
+    depends_on:
+      chroma:
+        condition: service_healthy
+    environment:
+      CHROMA_URI: agent-chroma
+      CHROMA_PORT: 8000
+      API_PORT: 8000
+    ports:
+      - "8000:8000"   # exporta o backend
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+
