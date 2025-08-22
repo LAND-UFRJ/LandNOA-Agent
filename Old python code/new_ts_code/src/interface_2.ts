@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.post('/upload', (req, res) => {
   const form = formidable({ multiples: false, uploadDir: UPLOAD_FOLDER, keepExtensions: true });
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, (err: any, fields: Record<string, any>, files: Record<string, any>) => {
     if (err) return res.status(500).json({ error: String(err) });
     // TODO: atualizar metadados CSV, indexar no Chroma etc.
     return res.json({ status: 'uploaded', files });

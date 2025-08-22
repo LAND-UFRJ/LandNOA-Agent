@@ -13,6 +13,8 @@ const PORT = parseInt(process.env.FLASK_RUN_PORT || '8000', 10);
 const app = express();
 app.use(express.json());
 
+type Decision = { tool_to_use: string; owner_agent_id: string; agent_execute_url: string } | null;
+
 let discoveredTools: any[] = [];
 let discoveredAgentsData: Record<string, any> = {};
 
@@ -39,7 +41,7 @@ async function fetchToolsFromRegistry() {
   }
 }
 
-function heuristicRoute(query: string) {
+function heuristicRoute(query: string): Decision {
   if (!query || discoveredTools.length === 0) return null;
   const q = query.toLowerCase();
   const aiKw = ['inteligencia artificial', 'ia', 'ai', 'ética', 'etica', 'modelo de ia'];
@@ -76,7 +78,7 @@ function formatCapabilitiesResponse() {
   return { answer: text, agents };
 }
 
-async function delegateToLLM(query: string) {
+async function delegateToLLM(query: string): Promise<Decision> {
   // TODO: integrar com LLM real. Aqui fazemos heuristica simples.
   // Return null to indicate no decision from LLM
   return null;
@@ -140,7 +142,7 @@ app.post('/query', async (req, res) => {
 });
 
 // bootstrap discovery loop
-+(async () => {
+(async () => {
   while (true) {
     await fetchToolsFromRegistry();
     if (discoveredTools && discoveredTools.length > 0) break;
