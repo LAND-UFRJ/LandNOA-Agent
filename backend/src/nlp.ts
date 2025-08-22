@@ -1,4 +1,3 @@
-
 import { pipeline } from '@huggingface/transformers';
 
 type EmbeddedVector = { data: number[] };

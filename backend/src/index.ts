@@ -4,13 +4,15 @@ import { ChromaDBRetriever } from './chromaDBRetriever';
 import * as crypto from 'node:crypto';
 import type { AddDocumentsPayload, A2AMessage } from './types';
 import { LLMConversation } from './llm';
+import { prom_metrics } from './metrics';
 
 dotenv.config();
 
-const AGENT_SECRET_TOKEN = process.env.AGENT_SECRET_TOKEN || 
-  crypto.randomBytes(16).toString('hex');
+const AGENT_SECRET_TOKEN = process.env.AGENT_SECRET_TOKEN || crypto.randomBytes(16).toString('hex');
+  
+console.log(AGENT_SECRET_TOKEN)
 const API_PORT = parseInt(process.env.API_PORT || '8000', 10);
-const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8000', 10);
+const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8001', 10);
 const CHROMA_URI = process.env.CHROMA_URI || 'localhost';
 
 const app = express();
@@ -85,6 +87,12 @@ app.post('/query', authenticateBearer, async (req: express.Request, res: express
     response: llmResponse,
     queryResult,
   });
+});
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (_req: express.Request, res: express.Response) => {
+  res.set('Content-Type', prom_metrics.register.contentType);
+  res.end(await prom_metrics.register.metrics());
 });
 
 app.listen(API_PORT, () => {
