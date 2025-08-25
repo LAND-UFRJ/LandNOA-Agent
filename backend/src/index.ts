@@ -12,7 +12,7 @@ const AGENT_SECRET_TOKEN = process.env.AGENT_SECRET_TOKEN || crypto.randomBytes(
   
 console.log(AGENT_SECRET_TOKEN)
 const API_PORT = parseInt(process.env.API_PORT || '8000', 10);
-const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8001', 10);
+const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8000', 10);
 const CHROMA_URI = process.env.CHROMA_URI || 'localhost';
 
 const app = express();

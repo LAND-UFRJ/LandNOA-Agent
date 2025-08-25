@@ -6,11 +6,6 @@ export interface AddDocumentsPayload {
   metadatas?: Metadata[];       // metadados opcionais (um por doc)
 }
 
-export interface Metrics{
-  input:number;
-  output:number;
-}
-
 export interface A2AMessage {
   sender_agent_id: string; 
   payload: {
