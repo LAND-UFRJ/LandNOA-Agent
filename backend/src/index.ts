@@ -4,6 +4,7 @@ import { ChromaDBRetriever } from './chromaDBRetriever';
 import * as crypto from 'node:crypto';
 import type { AddDocumentsPayload, A2AMessage } from './types';
 import { LLMConversation } from './llm';
+import { prom_metrics } from './metrics';
 
 dotenv.config();
 
@@ -85,6 +86,12 @@ app.post('/query', authenticateBearer, async (req: express.Request, res: express
     response: llmResponse,
     queryResult,
   });
+});
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (_req: express.Request, res: express.Response) => {
+  res.set('Content-Type', prom_metrics.register.contentType);
+  res.end(await prom_metrics.register.metrics());
 });
 
 app.listen(API_PORT, () => {

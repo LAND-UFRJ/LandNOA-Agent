@@ -1,5 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, AIMessage, SystemMessage, BaseMessage } from '@langchain/core/messages';
+import { inputTokens, outputTokens } from './metrics'
 
 // TODO: Remove hardcoded values and use environment variables
 const OPENAI_URL = process.env.OPENAI_API_BASE_URL || "http://10.246.47.184:10000/v1";
@@ -42,8 +43,12 @@ A sua tarefa é seguir este processo de forma rigorosa:
     this.history.push(new HumanMessage(humanInput));
     // Call the model with the conversation history
     const response = await this.model.invoke(this.history);
+    if (response.usage_metadata) {
+      inputTokens.inc(response.usage_metadata.output_tokens);
+      outputTokens.inc(response.usage_metadata.input_tokens);
+    }
     // Add AI response to history
-    const AIResp = response.content[0] as string;
+    const AIResp = response.content as string;
     this.history.push(new AIMessage(AIResp));
     return AIResp;
   }
