@@ -8,9 +8,9 @@ import { prom_metrics } from './metrics';
 
 dotenv.config();
 
-const AGENT_SECRET_TOKEN = process.env.AGENT_SECRET_TOKEN || crypto.randomBytes(16).toString('hex');
+const AGENT_SECRET_TOKEN = process.env.AGENT_SECRET_TOKEN || 
+crypto.randomBytes(16).toString('hex');
   
-console.log(AGENT_SECRET_TOKEN)
 const API_PORT = parseInt(process.env.API_PORT || '8000', 10);
 const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8000', 10);
 const CHROMA_URI = process.env.CHROMA_URI || 'localhost';
