@@ -13,3 +13,10 @@ export interface A2AMessage {
     uuid: string;         
   }
 }
+
+export interface MCP_Json {
+  type:string;
+  server_label:string;
+  server_url:string;
+  require_approval:string
+}

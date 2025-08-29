@@ -72,8 +72,8 @@ A sua tarefa é seguir este processo de forma rigorosa:
     // Optionally update the system message in history
     this.history = [new SystemMessage(this.systemPrompt), ...this.history.filter(msg => !(msg instanceof SystemMessage))];
   }
-  public addMcp(tool:any[]):void {
-    this.model = this.model.bindTools(tool)
+  public addMcp(tool:JSON[]):void {
+    this.model.bindTools(tool)
   }
 }
 
