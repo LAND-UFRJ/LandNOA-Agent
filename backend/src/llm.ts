@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { inputTokens, outputTokens } from './metrics'
+import { inputTokens, outputTokens } from './metrics.js'
 
 // TODO: Remove hardcoded values and use environment variables
 const OPENAI_URL = process.env.OPENAI_API_BASE_URL || 

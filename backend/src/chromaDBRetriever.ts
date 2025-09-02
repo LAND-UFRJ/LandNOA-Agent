@@ -2,14 +2,24 @@ import { ChromaClient, IncludeEnum } from "chromadb";
 
 const collectionName = 'landagents';
 
+// Função de embedding simples que retorna vetores aleatórios
+class SimpleEmbeddingFunction {
+  async generate(texts: string[]): Promise<number[][]> {
+    // Para teste, retorna vetores aleatórios de tamanho fixo
+    return texts.map(() => Array.from({ length: 384 }, () => Math.random() - 0.5));
+  }
+}
+
 export class ChromaDBRetriever {
   private client: ChromaClient;
+  private embeddingFunction: SimpleEmbeddingFunction;
 
   constructor(URI: string, port: number) {
     this.client = new ChromaClient({
       host: URI,
       port: port,
     });
+    this.embeddingFunction = new SimpleEmbeddingFunction();
   }
 
   async heartbeat() {
@@ -20,7 +30,10 @@ export class ChromaDBRetriever {
     ids: string[],
     documents?: string[],
   ) {
-    const collection = await this.client.getOrCreateCollection({ name: collectionName });
+    const collection = await this.client.getOrCreateCollection({ 
+      name: collectionName,
+      embeddingFunction: this.embeddingFunction as any
+    });
     return collection.add({
       ids: ids,
       documents: documents,
@@ -32,7 +45,10 @@ export class ChromaDBRetriever {
     n_results: number = 3,
     include: IncludeEnum[] = [IncludeEnum.distances, IncludeEnum.metadatas, IncludeEnum.documents]
   ) {
-    const collection = await this.client.getOrCreateCollection({ name: collectionName });
+    const collection = await this.client.getOrCreateCollection({ 
+      name: collectionName,
+      embeddingFunction: this.embeddingFunction as any
+    });
     return collection.query({
       queryTexts: query,
       nResults: n_results,

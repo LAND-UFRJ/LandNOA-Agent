@@ -1,10 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { ChromaDBRetriever } from './chromaDBRetriever';
+import { ChromaDBRetriever } from './chromaDBRetriever.js';
 import * as crypto from 'node:crypto';
-import type { AddDocumentsPayload, A2AMessage } from './types';
-import { LLMConversation } from './llm';
-import { prom_metrics } from './metrics';
+import type { AddDocumentsPayload, A2AMessage } from './types.js';
+import { LLMConversation } from './llm.js';
+import { prom_metrics } from './metrics.js';
 
 dotenv.config();
 
